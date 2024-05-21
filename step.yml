@@ -42,3 +42,8 @@ inputs:
     value_options:
     - "true"
     - "false"
+- node_modules_path_list: "node_modules"
+  opts:
+    title: Node modules paths
+    summary: New line separated list of the node module directories to cache
+    is_required: true
