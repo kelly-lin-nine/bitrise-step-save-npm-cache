@@ -19,13 +19,11 @@ const (
 	// Note: it only considers the top-level lockfiles because there are other lockfiles inside `node_modules`,
 	// otherwise the checksum would be different with and without a restored `node_modules` folder.
 	key = `{{ .OS }}-{{ .Arch }}-npm-cache-{{ checksum "package-lock.json" "yarn.lock" }}`
-
-	// Cached path
-	path = "node_modules"
 )
 
 type Input struct {
-	Verbose bool `env:"verbose,required"`
+	Verbose             bool `env:"verbose,required"`
+	NodeModulesPathList []string
 }
 
 type SaveCacheStep struct {
@@ -64,7 +62,7 @@ func (step SaveCacheStep) Run() error {
 	step.logger.Println()
 	step.logger.Printf("Cache key: %s", key)
 	step.logger.Printf("Cache paths:")
-	step.logger.Printf(path)
+	step.logger.Printf("%s", input.NodeModulesPathList)
 	step.logger.Println()
 
 	step.logger.EnableDebugLog(input.Verbose)
@@ -74,7 +72,7 @@ func (step SaveCacheStep) Run() error {
 		StepId:      stepId,
 		Verbose:     input.Verbose,
 		Key:         key,
-		Paths:       []string{path},
+		Paths:       input.NodeModulesPathList,
 		IsKeyUnique: true,
 	})
 }
